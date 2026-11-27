@@ -75,7 +75,7 @@ def network_start():
     try:
         return network.start()
     except OSError as exc:
-        raise HTTPException(503, f"Impossibile avviare la condivisione: {exc}")
+        raise HTTPException(503, f"Could not start sharing: {exc}")
 
 
 @app.post("/api/network/stop")
@@ -104,7 +104,7 @@ def network_revoke(client_id: str):
     try:
         network.revoke(client_id)
     except KeyError:
-        raise HTTPException(404, "Dispositivo non trovato.")
+        raise HTTPException(404, "Device not found.")
     return network.status()
 
 
@@ -113,7 +113,7 @@ def network_forget(peer_id: str):
     try:
         network.forget(peer_id)
     except KeyError:
-        raise HTTPException(404, "Computer non trovato.")
+        raise HTTPException(404, "Computer not found.")
     return network.status()
 
 
@@ -122,7 +122,7 @@ def network_discover():
     try:
         return {"devices": network.discover()}
     except OSError as exc:
-        raise HTTPException(503, f"Ricerca in rete non disponibile: {exc}")
+        raise HTTPException(503, f"Network discovery unavailable: {exc}")
 
 
 @app.post("/api/network/inspect")
@@ -146,7 +146,7 @@ def network_library(peer_id: str):
     try:
         return network.remote_library(peer_id)
     except KeyError:
-        raise HTTPException(404, "Computer non trovato.")
+        raise HTTPException(404, "Computer not found.")
     except PermissionError as exc:
         raise HTTPException(401, str(exc))
     except (ValueError, OSError, TimeoutError) as exc:
@@ -157,7 +157,7 @@ def _network_proxy(peer_id: str, kind: str, playlist: str, filename: str | None 
     try:
         return network.proxy(peer_id, kind, playlist, filename, range_header)
     except KeyError:
-        raise HTTPException(404, "Computer non trovato.")
+        raise HTTPException(404, "Computer not found.")
     except (ValueError, OSError, TimeoutError) as exc:
         raise HTTPException(502, str(exc))
 
@@ -195,7 +195,7 @@ def themes():
 @app.post("/api/playlists")
 def new_playlist(request: NameRequest):
     if not request.title.strip():
-        raise HTTPException(400, "Inserisci un nome per la playlist.")
+        raise HTTPException(400, "Enter a playlist name.")
     folder = library.create_playlist(request.title)
     return {"id": folder.name}
 
@@ -203,14 +203,14 @@ def new_playlist(request: NameRequest):
 @app.post("/api/playlists/add")
 def add_to_playlist(request: AddRequest):
     if request.file != Path(request.file).name or request.playlist != safe_name(request.playlist):
-        raise HTTPException(400, "Percorso non valido.")
+        raise HTTPException(400, "Invalid path.")
     source = library.root / request.file
     target_dir = library.root / request.playlist
     if not source.is_file() or not (target_dir / ".info").is_file():
-        raise HTTPException(404, "Brano o playlist non trovati.")
+        raise HTTPException(404, "Track or playlist not found.")
     target = target_dir / source.name
     if target.exists():
-        raise HTTPException(409, "Il brano è già nella playlist.")
+        raise HTTPException(409, "The track is already in the playlist.")
     shutil.copy2(source, target)
     tracks = library.list_playlists()
     playlist = next(item for item in tracks if item["id"] == request.playlist)
@@ -232,7 +232,7 @@ def rename_playlist(playlist: str, request: NameRequest):
 @app.delete("/api/playlists/{playlist}")
 def delete_playlist(playlist: str, keep_tracks: bool = True):
     if imports.is_downloading_playlist(playlist):
-        raise HTTPException(409, "Attendi la fine del download di questa playlist.")
+        raise HTTPException(409, "Wait for this playlist's download to finish.")
     try:
         library.delete_playlist(playlist, keep_tracks=keep_tracks)
     except ValueError as exc:
@@ -245,7 +245,7 @@ def delete_playlist(playlist: str, keep_tracks: bool = True):
 @app.post("/api/playlists/{playlist}/export")
 def export_playlist(playlist: str):
     if imports.is_downloading_playlist(playlist):
-        raise HTTPException(409, "Attendi la fine del download di questa playlist.")
+        raise HTTPException(409, "Wait for this playlist's download to finish.")
     try:
         archive = library.export_playlist(playlist, SHARE_ROOT)
     except ValueError as exc:
@@ -261,7 +261,7 @@ async def set_playlist_cover(playlist: str, request: Request):
     async for chunk in request.stream():
         data.extend(chunk)
         if len(data) > 4 * 1024 * 1024:
-            raise HTTPException(413, "Scegli un'immagine di massimo 4 MB.")
+            raise HTTPException(413, "Choose an image up to 4 MB.")
     try:
         library.set_playlist_cover(playlist, bytes(data))
     except ValueError as exc:
@@ -305,7 +305,7 @@ def get_job(job_id: str):
     try:
         return imports.get(job_id)
     except KeyError:
-        raise HTTPException(404, "Importazione non trovata.")
+        raise HTTPException(404, "Import job not found.")
 
 
 @app.get("/api/jobs")
@@ -318,7 +318,7 @@ def start_download(job_id: str):
     try:
         return imports.start(job_id)
     except KeyError:
-        raise HTTPException(404, "Importazione non trovata.")
+        raise HTTPException(404, "Import job not found.")
     except ValueError as exc:
         raise HTTPException(409, str(exc))
 
@@ -327,14 +327,14 @@ def _media_path(playlist: str, filename: str) -> Path:
     filename = unquote(filename)
     playlist = unquote(playlist)
     if filename != Path(filename).name or playlist not in ("_singles", safe_name(playlist)):
-        raise HTTPException(400, "Percorso non valido.")
+        raise HTTPException(400, "Invalid path.")
     try:
         folder = library.root if playlist == "_singles" else library.playlist_folder(playlist)
     except (ValueError, FileNotFoundError):
-        raise HTTPException(404, "Brano non trovato.")
+        raise HTTPException(404, "Track not found.")
     file = folder / filename
     if file.suffix.lower() != ".mp3" or not file.is_file() or file.is_symlink() or not file.resolve().is_relative_to(library.root.resolve()):
-        raise HTTPException(404, "Brano non trovato.")
+        raise HTTPException(404, "Track not found.")
     return file
 
 
@@ -354,4 +354,4 @@ def art(playlist: str, filename: str):
         raise
     except Exception:
         pass
-    raise HTTPException(404, "Copertina non trovata.")
+    raise HTTPException(404, "Cover not found.")

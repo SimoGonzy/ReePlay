@@ -6,7 +6,7 @@ The supplied brand artwork is a white **ReePlay** wordmark on black, with four b
 
 The full wordmark is `frontend/public/images/reeplay-wordmark.svg`, and `frontend/app-icon.svg` is the icon source. Icons in `frontend/src-tauri/icons` are generated from the latter. To regenerate them, run `cd frontend` and `npx tauri icon app-icon.svg`.
 
-The default theme is **Scuro** (Dark). Optional **Graphite 90** evokes 1990s audio players and tech software: graphite chassis, turquoise display, amber indicators, and raised buttons.
+The default theme is **Dark**. Optional **Graphite 90** evokes 1990s audio players and tech software: graphite chassis, turquoise display, amber indicators, and raised buttons.
 
 ![Graphite 90 screen concept](reeplay-graphite-concept.png)
 

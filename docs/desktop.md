@@ -1,6 +1,6 @@
 # Desktop architecture
 
-ReePlay uses a Tauri window containing the compiled React/TypeScript frontend. Images for **Vaporwave**, **Memphis Shapes**, **Stereo 2000**, and **Tramonto costiero** are stored in `frontend/public/images/`; Vite includes them in `frontend/dist/images/`.
+ReePlay uses a Tauri window containing the compiled React/TypeScript frontend. Images for **Vaporwave**, **Memphis Shapes**, **Stereo 2000**, and **Coastal Sunset** are stored in `frontend/public/images/`; Vite includes them in `frontend/dist/images/`.
 
 On Windows, `frontend/src-tauri/tauri.windows.conf.json` disables the native title bar. `frontend/src/WindowFrame.tsx` displays ReePlay's title bar, uses theme variables, and handles dragging, double-click to maximize or restore, minimizing, and closing. The bar remains available if the Python engine fails to start. Linux retains the desktop's native title bar.
 

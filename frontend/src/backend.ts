@@ -14,7 +14,7 @@ export async function api<T>(path: string, options?: RequestInit): Promise<T> {
   const data: unknown = await response.json()
   if (!response.ok) {
     const detail = typeof data === 'object' && data !== null && 'detail' in data
-      ? String(data.detail) : 'Operazione non riuscita'
+      ? String(data.detail) : 'Operation failed'
     throw new Error(detail)
   }
   return data as T
@@ -38,13 +38,13 @@ export async function startDesktopBackend(): Promise<void> {
       if (match) resolve(Number(match[1]))
     })
     command.on('error', reject)
-    command.on('close', () => reject(new Error('Il motore musicale si è chiuso prima dell’avvio.')))
+    command.on('close', () => reject(new Error('The music engine closed before startup.')))
   })
   const child = await command.spawn()
   try {
     const port = await Promise.race([
       announcedPort,
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Il motore musicale non si è avviato.')), 15000)),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('The music engine did not start.')), 15000)),
     ])
     backendOrigin = `http://127.0.0.1:${port}`
     for (let attempt = 0; attempt < 40; attempt += 1) {
@@ -52,7 +52,7 @@ export async function startDesktopBackend(): Promise<void> {
         const response = await fetch(apiUrl('/api/status'))
         if (response.ok) break
       } catch { /* The Python process is still starting. */ }
-      if (attempt === 39) throw new Error('Il motore musicale non risponde.')
+      if (attempt === 39) throw new Error('The music engine is not responding.')
       await new Promise(resolve => setTimeout(resolve, 250))
     }
   } catch (error) {

@@ -8,17 +8,17 @@ $baseName = "ReePlay_${version}_amd64"
 
 if (-not $SkipBuild) {
     docker build --progress=plain -t musicapp-linux-builder -f packaging/linux/Dockerfile .
-    if ($LASTEXITCODE -ne 0) { throw 'La build Docker Linux è fallita.' }
+    if ($LASTEXITCODE -ne 0) { throw 'The Linux Docker build failed.' }
 }
 
 $container = docker create musicapp-linux-builder /bin/true
-if ($LASTEXITCODE -ne 0) { throw 'Impossibile creare il container degli artefatti.' }
+if ($LASTEXITCODE -ne 0) { throw 'Could not create the artifact container.' }
 try {
     New-Item -ItemType Directory -Force -Path (Join-Path $projectRoot 'dist-linux') | Out-Null
     docker cp "${container}:/bundle/deb/$baseName.deb" (Join-Path $projectRoot "dist-linux/$baseName.deb")
-    if ($LASTEXITCODE -ne 0) { throw 'Copia del pacchetto .deb fallita.' }
+    if ($LASTEXITCODE -ne 0) { throw 'Could not copy the .deb package.' }
     docker cp "${container}:/bundle/appimage/$baseName.AppImage" (Join-Path $projectRoot "dist-linux/$baseName.AppImage")
-    if ($LASTEXITCODE -ne 0) { throw 'Copia AppImage fallita.' }
+    if ($LASTEXITCODE -ne 0) { throw 'Could not copy the AppImage.' }
     Copy-Item -LiteralPath (Join-Path $projectRoot 'packaging/linux/install-appimage.sh') -Destination (Join-Path $projectRoot 'dist-linux/install-appimage.sh') -Force
     Copy-Item -LiteralPath (Join-Path $projectRoot 'frontend/src-tauri/icons/128x128.png') -Destination (Join-Path $projectRoot 'dist-linux/ReePlay.png') -Force
 }

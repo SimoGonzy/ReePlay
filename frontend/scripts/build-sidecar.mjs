@@ -17,8 +17,8 @@ function run(executable, args) {
 
 const rustTriple = spawnSync('rustc', ['--print', 'host-tuple'], { encoding: 'utf8' })
 const triple = process.env.MUSICAPP_TARGET_TRIPLE || (rustTriple.status === 0 ? rustTriple.stdout.trim() : '')
-if (!triple) throw new Error('Rust non è installato. Installa Rust e i prerequisiti Tauri prima di creare il pacchetto desktop.')
-if (!/^[a-zA-Z0-9_-]+$/.test(triple)) throw new Error('Target Rust non valido.')
+if (!triple) throw new Error('Rust is not installed. Install Rust and the Tauri prerequisites before building the desktop package.')
+if (!/^[a-zA-Z0-9_-]+$/.test(triple)) throw new Error('Invalid Rust target.')
 
 const work = join(frontend, '.sidecar-build')
 mkdirSync(work, { recursive: true })
@@ -42,7 +42,7 @@ const output = join(frontend, 'src-tauri', 'binaries')
 mkdirSync(output, { recursive: true })
 const destination = join(output, `musicapp-backend-${triple}${suffix}`)
 copyFileSync(join(work, 'dist', `musicapp-backend${suffix}`), destination)
-console.log(`Sidecar pronta: ${destination}`)
+console.log(`Sidecar ready: ${destination}`)
 
 const licenseOutput = join(frontend, 'src-tauri', 'python-licenses')
 run(python, ['-c', `import importlib.metadata, pathlib, shutil, sys
@@ -51,7 +51,7 @@ for package in ('cryptography', 'zeroconf', 'ifaddr'):
     distribution = importlib.metadata.distribution(package)
     licenses = [entry for entry in distribution.files or [] if pathlib.Path(str(entry)).name.lower().startswith(('license', 'copying'))]
     if not licenses:
-        raise RuntimeError(f'Licenza non trovata per {package}')
+        raise RuntimeError(f'License not found for {package}')
     target = output / package
     target.mkdir(parents=True, exist_ok=True)
     for entry in licenses:

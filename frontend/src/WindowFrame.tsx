@@ -46,9 +46,9 @@ export default function WindowFrame({ children }: { children: ReactNode }) {
       <div className="window-titlebar-brand"><img src={iconUrl} alt="" /><span>ReePlay</span></div>
       <div className="window-titlebar-space" />
       <div className="window-titlebar-controls">
-        <button type="button" aria-label="Minimizza" title="Minimizza" onClick={() => void appWindow.minimize()}><Minus size={17} /></button>
-        <button type="button" aria-label={maximized ? 'Ripristina' : 'Ingrandisci'} title={maximized ? 'Ripristina' : 'Ingrandisci'} onClick={toggleMaximize}>{maximized ? <Copy size={14} /> : <Square size={14} />}</button>
-        <button type="button" className="window-titlebar-close" aria-label="Chiudi" title="Chiudi" onClick={() => void appWindow.close()}><X size={18} /></button>
+        <button type="button" aria-label="Minimize" title="Minimize" onClick={() => void appWindow.minimize()}><Minus size={17} /></button>
+        <button type="button" aria-label={maximized ? 'Restore' : 'Maximize'} title={maximized ? 'Restore' : 'Maximize'} onClick={toggleMaximize}>{maximized ? <Copy size={14} /> : <Square size={14} />}</button>
+        <button type="button" className="window-titlebar-close" aria-label="Close" title="Close" onClick={() => void appWindow.close()}><X size={18} /></button>
       </div>
     </header>
     {children}

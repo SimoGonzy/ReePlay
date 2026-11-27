@@ -9,7 +9,7 @@ fi
 if [ "$#" -eq 0 ]; then
   set -- "$script_dir"/ReePlay_*_amd64.AppImage
   if [ "$#" -ne 1 ] || [ ! -f "$1" ]; then
-    echo 'Metti un solo file ReePlay_*_amd64.AppImage accanto a questo script, oppure indicane il percorso.' >&2
+    echo 'Place one ReePlay_*_amd64.AppImage next to this script, or provide its path.' >&2
     exit 2
   fi
 fi

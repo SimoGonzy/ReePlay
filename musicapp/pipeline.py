@@ -27,7 +27,7 @@ def resolve_link(url: str) -> dict:
     with YoutubeDL(yt_dlp_options(quiet=True, extract_flat="in_playlist", skip_download=True, noplaylist=kind == "youtube_track")) as ydl:
         info = ydl.extract_info(url, download=False)
     if not info:
-        raise ValueError("YouTube non ha restituito dati per il link.")
+        raise ValueError("YouTube returned no data for this link.")
     entries = info.get("entries") or [info]
     tracks = []
     for entry in entries:
@@ -38,7 +38,7 @@ def resolve_link(url: str) -> dict:
             continue
         tracks.append({"title": entry.get("title") or "Senza titolo", "artist": entry.get("uploader") or entry.get("channel") or "", "duration": entry.get("duration") or 0, "cover": entry.get("thumbnail") or "", "direct_url": f"https://www.youtube.com/watch?v={video_id}"})
     if not tracks:
-        raise ValueError("Nessun brano trovato nel link YouTube.")
+        raise ValueError("No tracks found at this YouTube link.")
     return {"title": info.get("title") or tracks[0]["title"], "tracks": tracks, "link_spotify": "", "is_playlist": kind == "youtube_playlist"}
 
 
@@ -84,7 +84,7 @@ def choose_candidate(track: dict, entries: list[dict]) -> dict | None:
 
 def download_audio(track: dict, candidate: dict, destination: Path, progress) -> None:
     if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
-        raise RuntimeError("FFmpeg e FFprobe non trovati. Installali e riavvia ReePlay.")
+        raise RuntimeError("FFmpeg and FFprobe were not found. Install them and restart ReePlay.")
     from yt_dlp import YoutubeDL
     destination.parent.mkdir(parents=True, exist_ok=True)
     def hook(data):
@@ -100,7 +100,7 @@ def download_audio(track: dict, candidate: dict, destination: Path, progress) ->
     with YoutubeDL(options) as ydl:
         ydl.download([candidate["url"]])
     if not destination.exists():
-        raise RuntimeError("Il file audio convertito non è stato creato.")
+        raise RuntimeError("The converted audio file was not created.")
     try:
         from mutagen.id3 import APIC, ID3, TALB, TIT2, TPE1
         tags = ID3(destination)
@@ -191,7 +191,7 @@ class ImportManager:
     def start(self, job_id: str) -> dict:
         job = self.jobs[job_id]
         if job["state"] != "ready":
-            raise ValueError("L'anteprima non è pronta.")
+            raise ValueError("The preview is not ready.")
         job["state"] = "downloading"
         threading.Thread(target=self.run_download, args=(job_id,), daemon=True).start()
         return self.get(job_id)
@@ -199,7 +199,7 @@ class ImportManager:
     def run_download(self, job_id: str) -> None:
         job = self.jobs[job_id]
         if job["state"] not in ("ready", "downloading"):
-            raise ValueError("L'anteprima non è pronta.")
+            raise ValueError("The preview is not ready.")
         job["state"] = "downloading"
         folder = self.library.create_playlist(job["title"], job.get("link_spotify", "")) if job["is_playlist"] else self.library.root
         if job["is_playlist"]:

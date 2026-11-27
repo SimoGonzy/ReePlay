@@ -9,4 +9,4 @@ npm ci
 npm run build
 cd ..
 mkdir -p content
-printf '%s\n' 'Dipendenze installate. Per creare i pacchetti desktop esegui sh scripts/build-linux.sh.'
+printf '%s\n' 'Dependencies installed. Run sh scripts/build-linux.sh to build the desktop packages.'

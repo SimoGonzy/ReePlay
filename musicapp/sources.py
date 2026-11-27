@@ -30,7 +30,7 @@ def parse_source_url(url: str) -> tuple[str, str]:
             return "youtube_track", query["v"][0]
     if host == "youtu.be" and parts:
         return "youtube_track", parts[0]
-    raise ValueError("Link non supportato. Usa una playlist o un brano pubblico di Spotify/YouTube.")
+    raise ValueError("Unsupported link. Use a public Spotify or YouTube playlist or track.")
 
 
 def _track_from_entity(entity: dict) -> dict:
@@ -49,7 +49,7 @@ def _track_from_entity(entity: dict) -> dict:
 def parse_spotify_embed(html: str) -> dict:
     match = NEXT_DATA.search(html)
     if not match:
-        raise ValueError("Spotify non espone più i dati della pagina pubblica.")
+        raise ValueError("Spotify no longer exposes public page data.")
     try:
         page = json.loads(unescape(match.group(1)))
         props = page["props"]["pageProps"]
@@ -69,10 +69,10 @@ def parse_spotify_embed(html: str) -> dict:
                 if normalized["title"]:
                     tracks.append(normalized)
         if not tracks:
-            raise ValueError("Spotify non ha restituito brani per questo link pubblico.")
-        return {"title": entity.get("name") or entity.get("title") or "Playlist Spotify", "tracks": tracks}
+            raise ValueError("Spotify returned no tracks for this public link.")
+        return {"title": entity.get("name") or entity.get("title") or "Spotify playlist", "tracks": tracks}
     except (KeyError, TypeError, json.JSONDecodeError) as exc:
-        raise ValueError("Formato della pagina Spotify non riconosciuto.") from exc
+        raise ValueError("Unrecognized Spotify page format.") from exc
 
 
 def fetch_spotify(kind: str, source_id: str) -> dict:
@@ -87,15 +87,15 @@ def fetch_spotify(kind: str, source_id: str) -> dict:
         return parse_spotify_embed(html)
     match = NEXT_DATA.search(html)
     if not match:
-        raise ValueError("Spotify non espone più i dati della playlist pubblica.")
+        raise ValueError("Spotify no longer exposes public playlist data.")
     try:
         page = json.loads(unescape(match.group(1)))
         token = page["props"]["pageProps"]["state"]["settings"]["session"]["accessToken"]
     except (KeyError, TypeError, json.JSONDecodeError) as exc:
-        raise ValueError("Spotify non consente di leggere la playlist completa senza accesso.") from exc
+        raise ValueError("Spotify does not allow reading the full playlist without signing in.") from exc
     tracks = []
     offset = 0
-    title = "Playlist Spotify"
+    title = "Spotify playlist"
     while True:
         params = urlencode({
             "operationName": "fetchPlaylist",
@@ -112,7 +112,7 @@ def fetch_spotify(kind: str, source_id: str) -> dict:
             total = content["totalCount"]
             title = playlist.get("name") or title
         except Exception as exc:
-            raise ValueError("Spotify ha cambiato l'accesso alla playlist pubblica; importazione interrotta senza usare un elenco parziale.") from exc
+            raise ValueError("Spotify changed access to the public playlist; import stopped rather than using a partial list.") from exc
         for item in items:
             track = ((item or {}).get("itemV2") or {}).get("data") or {}
             if track.get("__typename") != "Track" or not track.get("name"):
@@ -125,7 +125,7 @@ def fetch_spotify(kind: str, source_id: str) -> dict:
         if offset >= total:
             break
         if not items:
-            raise ValueError("Spotify ha restituito soltanto una parte della playlist.")
+            raise ValueError("Spotify returned only part of the playlist.")
     if not tracks:
-        raise ValueError("La playlist Spotify pubblica non contiene brani leggibili.")
+        raise ValueError("The public Spotify playlist contains no readable tracks.")
     return {"title": title, "tracks": tracks}

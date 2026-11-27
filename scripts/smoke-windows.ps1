@@ -5,7 +5,7 @@ $project = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $backend = Join-Path $project 'frontend/src-tauri/binaries/musicapp-backend-x86_64-pc-windows-msvc.exe'
 $tools = Join-Path $project 'frontend/src-tauri/bundled-tools'
 if (-not (Test-Path -LiteralPath $backend -PathType Leaf) -or -not (Test-Path -LiteralPath $tools -PathType Container)) {
-    throw 'Compila il sidecar Windows prima di eseguire questo smoke test.'
+    throw 'Build the Windows sidecar before running this smoke test.'
 }
 
 $tempRoot = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
@@ -24,10 +24,10 @@ try {
     $start.EnvironmentVariables['MUSICAPP_TOOLS_DIR'] = $tools
     $process = [System.Diagnostics.Process]::new()
     $process.StartInfo = $start
-    if (-not $process.Start()) { throw 'Il motore non si è avviato.' }
+    if (-not $process.Start()) { throw 'The engine did not start.' }
     $lineTask = $process.StandardOutput.ReadLineAsync()
     if (-not $lineTask.Wait(20000) -or $lineTask.Result -notmatch '^MUSICAPP_PORT=([0-9]+)$') {
-        throw 'Il motore non ha annunciato la porta.'
+        throw 'The engine did not announce a port.'
     }
     $port = [int]$Matches[1]
 
@@ -39,22 +39,22 @@ try {
             break
         }
         catch {
-            if ($process.HasExited) { throw 'Il motore si è chiuso durante l’avvio.' }
+            if ($process.HasExited) { throw 'The engine closed during startup.' }
             Start-Sleep -Milliseconds 250
         }
     }
-    if (-not $status) { throw "Il motore non risponde sulla porta $port." }
+    if (-not $status) { throw "The engine is not responding on port $port." }
     if (-not $status.ffmpeg -or -not $status.content.EndsWith('content\library')) {
-        throw 'Backend, FFmpeg o percorso libreria non validi.'
+        throw 'Invalid backend, FFmpeg, or library path.'
     }
     $playlist = Invoke-RestMethod -Uri "$url/api/playlists" -Method Post -ContentType 'application/json' -Body '{"title":"Windows smoke"}'
     $archive = Invoke-RestMethod -Uri "$url/api/playlists/$($playlist.id)/export" -Method Post
-    if (-not (Test-Path -LiteralPath $archive.path -PathType Leaf)) { throw 'Archivio ZIP non creato.' }
+    if (-not (Test-Path -LiteralPath $archive.path -PathType Leaf)) { throw 'ZIP archive was not created.' }
     Invoke-RestMethod -Uri "$url/api/playlists/$($playlist.id)?keep_tracks=true" -Method Delete | Out-Null
     if ((Invoke-RestMethod -Uri "$url/api/library").playlists | Where-Object id -eq $playlist.id) {
-        throw 'Playlist non eliminata.'
+        throw 'Playlist was not deleted.'
     }
-    Write-Output 'Windows sidecar: FFmpeg, libreria, ZIP ed eliminazione OK'
+    Write-Output 'Windows sidecar: FFmpeg, library, ZIP, and deletion OK'
 }
 finally {
     if ($process) {
@@ -66,7 +66,7 @@ finally {
     }
     $resolved = [System.IO.Path]::GetFullPath($temporary)
     if (-not $resolved.StartsWith($tempRoot, [System.StringComparison]::OrdinalIgnoreCase) -or (Split-Path $resolved -Leaf) -notlike 'reeplay-smoke-*') {
-        throw 'Percorso temporaneo non valido: pulizia interrotta.'
+        throw 'Invalid temporary path: cleanup stopped.'
     }
     for ($attempt = 0; $attempt -lt 8; $attempt++) {
         try {

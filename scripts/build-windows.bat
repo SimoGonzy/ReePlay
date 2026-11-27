@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0.."
 if not exist .venv\Scripts\python.exe (
-  echo Esegui scripts\setup-windows.bat prima di compilare l'app desktop.
+  echo Run scripts\setup-windows.bat before building the desktop app.
   exit /b 1
 )
 .venv\Scripts\python.exe -m pip install -r requirements-build.txt || exit /b 1

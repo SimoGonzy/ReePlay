@@ -46,7 +46,7 @@ install -m 755 "$ffmpeg_bin" "$tools/ffmpeg"
 install -m 755 "$ffprobe_bin" "$tools/ffprobe"
 ffmpeg_license=$(find "$extract" -type f -name LICENSE.txt -print -quit)
 if [ -z "$ffmpeg_license" ]; then
-  echo 'Archivio FFmpeg privo del testo della licenza.' >&2
+  echo 'FFmpeg archive does not include the license text.' >&2
   exit 1
 fi
 install -m 644 "$ffmpeg_license" "$tools/licenses/ffmpeg-LICENSE.txt"

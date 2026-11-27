@@ -13,10 +13,10 @@
 - **Import:** Paste a link to a public Spotify track, album, or playlist, or a YouTube video or playlist. ReePlay reads the track list, searches for matches on YouTube, and shows how many it found **before** downloading. Public Spotify pages are read without an account; this method may break if Spotify changes its website.
 - **Download and playback:** yt-dlp and FFmpeg create MP3 files with title, artist, album, and cover art when available. Downloads continue in the background while you use the app. Saved files play offline.
 - **Playlists:** Create playlists, change their names and covers, and move or copy tracks between playlists. You can delete a playlist while **keeping its tracks** in the Library, or delete its folder and files too.
-- **ZIP sharing:** The **Condividi ZIP** button creates an archive containing MP3 files, `.info` metadata, and the cover. It uses ZIP_STORED, so MP3 files are neither re-encoded nor altered. The app shows the path of the archive in `content/share`.
+- **ZIP sharing:** The **Share ZIP** button creates an archive containing MP3 files, `.info` metadata, and the cover. It uses ZIP_STORED, so MP3 files are neither re-encoded nor altered. The app shows the path of the archive in `content/share`.
 - **Receiving a ZIP:** On another PC, extract the archive's folder into `content/library` to make the playlist appear in ReePlay. The [playlist sharing guide](docs/condivisione-playlist.md) explains the steps and what happens when you delete a playlist.
 - **Local network:** Another PC running ReePlay can stream your library after pairing with a code and verifying the certificate fingerprint. Sharing must be enabled at each launch.
-- **Appearance:** **Scuro** is the default theme. The palette icon in the sidebar opens the theme list: Graphite 90, Vaporwave, Memphis Shapes, Stereo 2000, Tramonto costiero, and the custom JSON themes described in [Themes and plugins](docs/themes.md). On Windows, the title bar also follows the selected theme and includes the window controls.
+- **Appearance:** **Dark** is the default theme. The palette icon in the sidebar opens the theme list: Graphite 90, Vaporwave, Memphis Shapes, Stereo 2000, Coastal Sunset, and the custom JSON themes described in [Themes and plugins](docs/themes.md). On Windows, the title bar also follows the selected theme and includes the window controls.
 
 ReePlay is independent of Spotify, YouTube, and yt-dlp. A Spotify link identifies tracks; the audio is found on YouTube and may be a different version. Download only content you have the right to download and keep.
 
@@ -30,15 +30,15 @@ ReePlay is independent of Spotify, YouTube, and yt-dlp. A Spotify link identifie
 
 Packages built with this repository's scripts include **Python, yt-dlp, Node.js, FFmpeg, FFprobe**, and the libraries needed for local network sharing. End users do not need to install these separately. The `.deb` installs the system graphics libraries required by Tauri; the AppImage may require FUSE. An Internet connection is needed to search for and download new tracks.
 
-On Windows, enabling **Rete Locale** for the first time may trigger a Firewall prompt. Allow access **only on private networks**. The current installer works without administrator privileges and does not create an inbound rule; see [Firewall and networks](docs/rete-locale.md#firewall-and-networks).
+On Windows, enabling **Local Network** for the first time may trigger a Firewall prompt. Allow access **only on private networks**. The current installer works without administrator privileges and does not create an inbound rule; see [Firewall and networks](docs/rete-locale.md#firewall-and-networks).
 
 ## Quick start
 
-1. Paste a link in the top bar and click **Importa** (Import).
-2. Review the preview and click **Scarica** (Download). The **Importazioni** (Imports) panel shows results, progress, and errors while you continue using the app.
-3. Open **Libreria** (Library) or a playlist. Search is available within the open collection. The player supports skipping, seeking, volume, repeat, and shuffle.
-4. Use **+** to create an empty playlist and **Modifica** (Edit) to change its name and cover. A track's row menu lets you move or copy it, including into a new playlist.
-5. In a playlist, click **Condividi ZIP** (Share ZIP) to create an archive to transfer as you wish. Use **Elimina** (Delete) to choose whether to keep its tracks.
+1. Paste a link in the top bar and click **Import**.
+2. Review the preview and click **Download**. The **Imports** panel shows results, progress, and errors while you continue using the app.
+3. Open **Library** or a playlist. Search is available within the open collection. The player supports skipping, seeking, volume, repeat, and shuffle.
+4. Use **+** to create an empty playlist and **Edit** to change its name and cover. A track's row menu lets you move or copy it, including into a new playlist.
+5. In a playlist, click **Share ZIP** to create an archive to transfer as you wish. Use **Delete** to choose whether to keep its tracks.
 6. To listen from another PC, follow the [local network guide](docs/rete-locale.md#connecting-two-pcs).
 
 ## Files and migration
@@ -66,7 +66,7 @@ At startup, ReePlay moves playlists and MP3 files from the old `content/` locati
 
 ## Themes and previews
 
-Graphite 90 evokes a 1990s tech music player with a graphite frame, turquoise display, and amber indicators. Vaporwave and Memphis Shapes use original illustrations. Tramonto costiero uses no official game assets. The following previews use fictional tracks.
+Graphite 90 evokes a 1990s tech music player with a graphite frame, turquoise display, and amber indicators. Vaporwave and Memphis Shapes use original illustrations. Coastal Sunset uses no official game assets. The following previews use fictional tracks.
 
 | Vaporwave                                             | Memphis Shapes                                           |
 | ----------------------------------------------------- | -------------------------------------------------------- |

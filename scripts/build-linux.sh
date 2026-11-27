@@ -2,7 +2,7 @@
 set -eu
 cd "$(dirname "$0")/.."
 if [ ! -x .venv/bin/python ]; then
-  echo 'Esegui sh scripts/setup-linux.sh prima di compilare l’app desktop.'
+  echo 'Run sh scripts/setup-linux.sh before building the desktop app.'
   exit 1
 fi
 .venv/bin/python -m pip install -r requirements-build.txt

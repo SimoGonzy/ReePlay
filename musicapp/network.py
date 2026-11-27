@@ -48,9 +48,9 @@ def _local_address(value: str) -> str:
     try:
         address = ipaddress.ip_address(value)
     except ValueError as exc:
-        raise ValueError("Inserisci un indirizzo IP, non un nome host.") from exc
+        raise ValueError("Enter an IP address, not a hostname.") from exc
     if not isinstance(address, ipaddress.IPv4Address) or not (address.is_loopback or address.is_link_local or any(address in network for network in PRIVATE_NETWORKS)):
-        raise ValueError("È consentito soltanto un indirizzo IPv4 della rete locale.")
+        raise ValueError("Only a local network IPv4 address is allowed.")
     return str(address)
 
 
@@ -222,7 +222,7 @@ class NetworkManager:
     def new_code(self):
         with self._lock:
             if not self.port:
-                raise ValueError("Attiva prima la condivisione.")
+                raise ValueError("Turn on sharing first.")
             self._code = f"{secrets.randbelow(1000000):06d}"
             self._code_expiry = time.monotonic() + 300
             return self.status()
@@ -238,7 +238,7 @@ class NetworkManager:
     def set_name(self, name: str):
         name = name.strip()[:80]
         if not name:
-            raise ValueError("Inserisci un nome per questo PC.")
+            raise ValueError("Enter a name for this PC.")
         with self._lock:
             self._settings["name"] = name
             self._save("settings.json", self._settings)
@@ -262,18 +262,18 @@ class NetworkManager:
         token = request.headers.get("authorization", "").removeprefix("Bearer ")
         digest = hashlib.sha256(token.encode()).hexdigest()
         if not token or not any(secrets.compare_digest(c["digest"], digest) for c in self._settings["clients"]):
-            raise HTTPException(401, "Dispositivo non autorizzato.")
+            raise HTTPException(401, "Device not authorized.")
 
     def _media_path(self, playlist, filename):
         if filename != Path(filename).name or filename in (".", "..") or not filename.lower().endswith(".mp3"):
-            raise HTTPException(400, "Percorso non valido.")
+            raise HTTPException(400, "Invalid path.")
         try:
             folder = self.library.root if playlist == "_singles" else self.library.playlist_folder(playlist)
         except (ValueError, FileNotFoundError):
-            raise HTTPException(404, "Playlist non trovata.")
+            raise HTTPException(404, "Playlist not found.")
         target = folder / filename
         if not target.resolve().is_relative_to(self.library.root.resolve()) or not target.is_file():
-            raise HTTPException(404, "Brano non trovato.")
+            raise HTTPException(404, "Track not found.")
         return target
 
     def _make_lan_app(self):
@@ -297,11 +297,11 @@ class NetworkManager:
             with self._lock:
                 attempts = [t for t in self._failures.get(address, []) if time.monotonic() - t < 300]
                 if len(attempts) >= 5:
-                    raise HTTPException(429, "Troppi tentativi. Riprova tra cinque minuti.")
+                    raise HTTPException(429, "Too many attempts. Try again in five minutes.")
                 if not self._code or time.monotonic() >= self._code_expiry or not secrets.compare_digest(body.code, self._code):
                     attempts.append(time.monotonic())
                     self._failures[address] = attempts
-                    raise HTTPException(403, "Codice non valido o scaduto.")
+                    raise HTTPException(403, "Invalid or expired code.")
                 self._code = None
                 self._code_expiry = 0
                 token = secrets.token_urlsafe(32)
@@ -331,7 +331,7 @@ class NetworkManager:
                 raise
             except Exception:
                 pass
-            raise HTTPException(404, "Copertina non trovata.")
+            raise HTTPException(404, "Cover not found.")
 
         @app.get("/v1/cover/{playlist}")
         def cover(playlist: str, request: Request):
@@ -339,9 +339,9 @@ class NetworkManager:
             try:
                 file = self.library.cover_file(playlist)
             except (ValueError, FileNotFoundError):
-                raise HTTPException(404, "Copertina non trovata.")
+                raise HTTPException(404, "Cover not found.")
             if not file.resolve().is_relative_to(self.library.root.resolve()):
-                raise HTTPException(404, "Copertina non trovata.")
+                raise HTTPException(404, "Cover not found.")
             return FileResponse(file, media_type={".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp"}[file.suffix.lower()])
 
         return app
@@ -356,7 +356,7 @@ class NetworkManager:
         actual = hashlib.sha256(connection.sock.getpeercert(binary_form=True)).hexdigest()
         if fingerprint is not None and not secrets.compare_digest(actual, fingerprint.lower()):
             connection.close()
-            raise ValueError("L'identità del server è cambiata. Connessione interrotta.")
+            raise ValueError("The server identity changed. Connection stopped.")
         return connection, actual
 
     def _request(self, host, port, path, fingerprint, token=None, body=None, range_header=None):
@@ -379,7 +379,7 @@ class NetworkManager:
         connection, response, fingerprint = self._request(host, port, "/v1/identity", None)
         try:
             if response.status != 200:
-                raise ValueError("Il PC non risponde come server ReePlay.")
+                raise ValueError("This PC is not responding as a ReePlay server.")
             info = json.loads(response.read(65536))
             return {"host": _local_address(host), "port": port, "id": info["id"], "name": info["name"], "fingerprint": fingerprint}
         finally:
@@ -387,12 +387,12 @@ class NetworkManager:
 
     def connect(self, host, port, fingerprint, code):
         if len(fingerprint) != 64 or any(c not in "0123456789abcdefABCDEF" for c in fingerprint):
-            raise ValueError("Impronta del server non valida.")
+            raise ValueError("Invalid server fingerprint.")
         connection, response, _ = self._request(host, port, "/v1/pair", fingerprint, body={"code": code, "name": socket.gethostname()[:80]})
         try:
             result = json.loads(response.read(65536))
             if response.status != 200:
-                raise ValueError(result.get("detail", "Associazione non riuscita."))
+                raise ValueError(result.get("detail", "Pairing failed."))
             peer = {"id": result["server_id"], "name": result["name"], "host": _local_address(host),
                     "port": port, "fingerprint": fingerprint.lower(), "token": result["token"]}
             with self._lock:
@@ -413,12 +413,12 @@ class NetworkManager:
         connection, response, _ = self._request(peer["host"], peer["port"], "/v1/library", peer["fingerprint"], peer["token"])
         try:
             if response.status == 401:
-                raise PermissionError("Accesso revocato dal computer remoto.")
+                raise PermissionError("Access revoked by the remote computer.")
             if response.status != 200:
-                raise OSError("Catalogo remoto non disponibile.")
+                raise OSError("Remote catalog unavailable.")
             raw = response.read(8 * 1024 * 1024 + 1)
             if len(raw) > 8 * 1024 * 1024:
-                raise ValueError("Catalogo remoto troppo grande.")
+                raise ValueError("Remote catalog is too large.")
             return json.loads(raw)
         finally:
             connection.close()
@@ -431,7 +431,7 @@ class NetworkManager:
         connection, response, _ = self._request(peer["host"], peer["port"], path, peer["fingerprint"], peer["token"], range_header=range_header)
         if response.status not in (200, 206):
             connection.close()
-            raise HTTPException(response.status if response.status in (401, 404, 416) else 502, "Contenuto remoto non disponibile.")
+            raise HTTPException(response.status if response.status in (401, 404, 416) else 502, "Remote content unavailable.")
         headers = {name: value for name in ("content-length", "content-range", "accept-ranges", "etag", "last-modified") if (value := response.getheader(name))}
         headers["X-Content-Type-Options"] = "nosniff"
 
