@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360" role="img" aria-label="Composizione Memphis con cerchi, zigzag e forme colorate">
+  <defs>
+    <pattern id="dots" width="19" height="19" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="#17345b" opacity=".17"/></pattern>
+    <pattern id="stripes" width="13" height="13" patternTransform="rotate(28)" patternUnits="userSpaceOnUse"><path d="M0 0v13" stroke="#113b69" stroke-width="5"/></pattern>
+  </defs>
+  <path fill="#fff5df" d="M0 0h1600v360H0z"/>
+  <path fill="url(#dots)" d="M0 0h1600v360H0z"/>
+  <path d="M770-40 1270 0l-115 360-455 60z" fill="#f5e4c8" opacity=".7"/>
+  <circle cx="1336" cy="105" r="102" fill="#ffca52" stroke="#183658" stroke-width="7"/>
+  <circle cx="1336" cy="105" r="52" fill="#fff7e8" stroke="#183658" stroke-width="6"/>
+  <path d="m1016 31 177 28-30 187-177-28z" fill="#50c4bb" stroke="#183658" stroke-width="7" transform="rotate(-8 1090 130)"/>
+  <path d="m1027 85 135 21-21 79-135-21z" fill="url(#stripes)"/>
+  <path d="m817 340 98-236 98 236z" fill="#f46e75" stroke="#183658" stroke-width="7"/>
+  <circle cx="1520" cy="292" r="105" fill="#ec77b8" stroke="#183658" stroke-width="7"/>
+  <path d="M1466 255q25-46 52 0t52 0" fill="none" stroke="#fff4de" stroke-width="12" stroke-linecap="round"/>
+  <path d="m1210 291 42-34 41 34 42-34 41 34 41-34 42 34" fill="none" stroke="#203b66" stroke-width="13" stroke-linejoin="bevel"/>
+  <path d="m688 64 26-31 27 31 26-31 27 31 27-31 26 31" fill="none" stroke="#ec6a72" stroke-width="10" stroke-linejoin="bevel"/>
+  <path d="M717 237a50 50 0 1 1 100 0 50 50 0 1 1-100 0" fill="#f8c857" stroke="#183658" stroke-width="6"/>
+  <path d="M749 205v65m37-65v65" stroke="#17365a" stroke-width="7"/>
+  <path d="m927 17 11 27 28-4-18 22 16 24-27-8-17 23-2-29-29-8 28-10z" fill="#ef77b7" stroke="#183658" stroke-width="5"/>
+  <path d="M0 0h618l88 360H0z" fill="#fff5df" opacity=".66"/>
+</svg>

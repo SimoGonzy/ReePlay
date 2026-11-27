@@ -1,0 +1,14 @@
+{
+  "bundle": {
+    "targets": ["deb", "appimage"],
+    "resources": ["bundled-tools/**/*", "python-licenses/**/*", "../../LICENSE"],
+    "linux": {
+      "appimage": { "bundleMediaFramework": true },
+      "deb": {
+        "recommends": ["gstreamer1.0-libav", "gstreamer1.0-plugins-good"],
+        "conflicts": ["music-app", "local-fm"],
+        "replaces": ["music-app", "local-fm"]
+      }
+    }
+  }
+}

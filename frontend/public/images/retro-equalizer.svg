@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="124" height="124" viewBox="0 0 124 124" role="img" aria-label="Equalizzatore luminoso">
+  <defs>
+    <linearGradient id="screen" x2="0" y2="1"><stop stop-color="#092c34"/><stop offset="1" stop-color="#031318"/></linearGradient>
+    <linearGradient id="bars" x2="0" y2="1"><stop stop-color="#c4fff2"/><stop offset=".5" stop-color="#67e7d8"/><stop offset="1" stop-color="#147e8a"/></linearGradient>
+    <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#4edfc2" stroke-opacity=".12"/></pattern>
+  </defs>
+  <rect width="124" height="124" fill="url(#screen)"/>
+  <rect x="8" y="8" width="108" height="108" fill="url(#grid)"/>
+  <g fill="url(#bars)">
+    <rect x="16" y="66" width="7" height="42"/><rect x="27" y="52" width="7" height="56"/>
+    <rect x="38" y="73" width="7" height="35"/><rect x="49" y="39" width="7" height="69"/>
+    <rect x="60" y="29" width="7" height="79"/><rect x="71" y="57" width="7" height="51"/>
+    <rect x="82" y="47" width="7" height="61"/><rect x="93" y="78" width="7" height="30"/>
+    <rect x="104" y="63" width="5" height="45"/>
+  </g>
+  <path d="M10 108H114" stroke="#9ff5e5" stroke-opacity=".65"/>
+</svg>

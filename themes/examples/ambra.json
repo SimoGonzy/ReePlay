@@ -1,0 +1,20 @@
+{
+  "id": "ambra",
+  "name": "Ambra",
+  "style": "flat",
+  "colors": {
+    "bg": "#171410",
+    "sidebar": "#211a13",
+    "surface": "#261e16",
+    "text": "#fff1dd",
+    "muted": "#c9ae8d",
+    "border": "#4b3928",
+    "accent": "#e79a36",
+    "accent_text": "#211408",
+    "selected": "#5a351c",
+    "row_alt": "#2d2219",
+    "player": "#211a13",
+    "danger": "#f28c7c",
+    "positive": "#8ad7aa"
+  }
+}

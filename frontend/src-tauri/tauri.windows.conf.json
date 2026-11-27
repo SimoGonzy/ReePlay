@@ -1,0 +1,8 @@
+{
+  "app": {
+    "windows": [{ "title": "ReePlay", "width": 1440, "height": 900, "minWidth": 900, "minHeight": 580, "decorations": false }]
+  },
+  "bundle": {
+    "resources": ["bundled-tools/**/*", "../../LICENSE"]
+  }
+}

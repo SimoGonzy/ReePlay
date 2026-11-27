@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 360" role="img" aria-label="Orizzonte vaporwave con sole, montagne e griglia al neon">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#171033"/><stop offset=".55" stop-color="#713676"/><stop offset="1" stop-color="#e16fa7"/></linearGradient>
+    <linearGradient id="sun" x2="0" y2="1"><stop stop-color="#ffeaa8"/><stop offset=".55" stop-color="#ff9aa9"/><stop offset="1" stop-color="#f35bc7"/></linearGradient>
+    <linearGradient id="land" x2="0" y2="1"><stop stop-color="#2b205d"/><stop offset="1" stop-color="#0c1232"/></linearGradient>
+    <linearGradient id="grid" x2="0" y2="1"><stop stop-color="#f67ee1" stop-opacity=".1"/><stop offset="1" stop-color="#4ff4f1" stop-opacity=".75"/></linearGradient>
+    <clipPath id="disc"><circle cx="1155" cy="191" r="128"/></clipPath>
+    <filter id="glow"><feGaussianBlur stdDeviation="10"/></filter>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v360H0z"/>
+  <g fill="#fff3fa" opacity=".72"><circle cx="804" cy="36" r="2"/><circle cx="920" cy="69" r="1.5"/><circle cx="1065" cy="28" r="2"/><circle cx="1425" cy="47" r="2"/><circle cx="1510" cy="119" r="1.5"/><circle cx="1315" cy="92" r="1"/><circle cx="730" cy="107" r="1"/></g>
+  <circle cx="1155" cy="191" r="130" fill="#ff79c9" opacity=".55" filter="url(#glow)"/>
+  <circle cx="1155" cy="191" r="128" fill="url(#sun)"/>
+  <g clip-path="url(#disc)" fill="#784883" opacity=".78"><path d="M1000 238h310v9h-310zM1000 259h310v12h-310zM1000 285h310v16h-310zM1000 314h310v21h-310z"/></g>
+  <path d="M540 292 720 158l120 96 69-49 88 78 104-37 81 49 116-58 142 72v55H540z" fill="url(#land)" stroke="#78d9e8" stroke-opacity=".5" stroke-width="2"/>
+  <path d="M550 292h1050v68H550z" fill="#101332"/>
+  <g stroke="url(#grid)" stroke-width="2" fill="none" opacity=".8"><path d="M550 309h1050M550 324h1050M550 344h1050M1075 293 730 360M1075 293 925 360M1075 293 1075 360M1075 293 1225 360M1075 293 1420 360M1075 293 1590 360"/></g>
+  <path d="M0 0h720l170 360H0z" fill="#120b2d" opacity=".6"/>
+  <path d="M0 0h480l235 360H0z" fill="#110a2a" opacity=".32"/>
+</svg>

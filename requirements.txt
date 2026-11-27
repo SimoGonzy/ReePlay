@@ -1,0 +1,8 @@
+fastapi>=0.115,<1
+uvicorn>=0.32,<1
+yt-dlp[default]>=2026.10
+mutagen>=1.47,<2
+certifi>=2025.1
+cryptography>=43,<51
+zeroconf>=0.150,<0.153
+ifaddr>=0.2,<1
